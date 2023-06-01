@@ -5,19 +5,19 @@ use crate::traits::TotalLetters;
 use super::Quran;
 
 #[derive(Debug)]
-pub struct Summary<'a> {
+pub struct Summary {
     pub total_surahs: usize,
     pub total_ayahs: usize,
     pub total_letters: usize,
     pub total_words: usize,
-    pub longest_surah_name: &'a str,
+    pub longest_surah_name: String,
     pub longest_surah_letters: usize,
-    pub shortest_surah_name: &'a str,
+    pub shortest_surah_name: String,
     pub shortest_surah_letters: usize,
     pub most_common_word: Option<(String, i32)>,
 }
 
-impl Default for Summary<'_> {
+impl Default for Summary {
     fn default() -> Self {
         Self {
             total_surahs: Default::default(),

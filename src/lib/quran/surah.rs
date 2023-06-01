@@ -18,8 +18,8 @@ pub struct Surah {
 }
 
 impl Surah {
-    pub fn name(&self) -> &str {
-        &self.name
+    pub fn name(&self) -> String {
+        self.name.to_owned()
     }
 
     pub fn ayas(&self) -> &Vec<Ayah> {
