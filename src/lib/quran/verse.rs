@@ -1,15 +1,13 @@
-use serde::{Deserialize, Serialize};
-
 use crate::{
     remove_diacritics,
     traits::{TotalLetters, TotalWords},
 };
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug)]
 pub struct Ayah {
-    id: u32,
-    text: String,
-    translation: String,
+    pub(in crate::quran) ayah_number: u32,
+    pub(in crate::quran) surah_name: String,
+    pub(in crate::quran) text: String,
 }
 
 impl Ayah {
@@ -21,8 +19,12 @@ impl Ayah {
         self.text.as_str()
     }
 
+    pub fn surah_name(&self) -> &str {
+        self.surah_name.as_str()
+    }
+
     pub fn number(&self) -> usize {
-        self.id as usize
+        self.ayah_number as usize
     }
 
     pub fn contains_word(&self, search_term: &str) -> bool {

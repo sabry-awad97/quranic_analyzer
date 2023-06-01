@@ -30,6 +30,15 @@ impl Quran {
         &self.surahs
     }
 
+    pub fn ayas(&self) -> Vec<&Ayah> {
+        self.surahs
+            .iter()
+            .map(|s| s.ayas())
+            .clone()
+            .flatten()
+            .collect::<Vec<_>>()
+    } 
+
     fn read_json() -> Result<serde_json::Value, QuranError> {
         let file = Self::open_file()?;
         let reader = Self::read_file(file)?;
@@ -55,7 +64,7 @@ impl Quran {
             for surah in surahs {
                 let id = surah["id"]
                     .as_u64()
-                .ok_or(QuranError::JsonError("Invalid surah id".to_string()))?
+                    .ok_or(QuranError::JsonError("Invalid surah id".to_string()))?
                     as u32;
 
                 let surah_name = surah["name"]

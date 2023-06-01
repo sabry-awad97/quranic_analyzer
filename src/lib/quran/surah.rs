@@ -1,20 +1,13 @@
-use serde::{Deserialize, Serialize};
-
 use crate::traits::{TotalLetters, TotalWords};
 
 use super::verse::Ayah;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug)]
 pub struct Surah {
-    id: u32,
-    name: String,
-    transliteration: String,
-    translation: String,
-    #[serde(rename = "type")]
-    revelation_type: String,
-    total_verses: u32,
-    #[serde(rename = "verses")]
-    ayahs: Vec<Ayah>,
+    pub(in crate::quran) id: u32,
+    pub(in crate::quran) name: String,
+    pub(in crate::quran) total_verses: u32,
+    pub(in crate::quran) ayahs: Vec<Ayah>,
 }
 
 impl Surah {
@@ -22,12 +15,16 @@ impl Surah {
         self.name.to_owned()
     }
 
+    pub fn id(&self) -> u32 {
+        self.id
+    }
+
     pub fn ayas(&self) -> &Vec<Ayah> {
         &self.ayahs
     }
 
     pub fn total_ayahs(&self) -> usize {
-        self.ayahs.len()
+        self.total_verses as usize
     }
 }
 

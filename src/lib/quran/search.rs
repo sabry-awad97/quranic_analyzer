@@ -32,6 +32,34 @@ impl<'a> QuranSearch<'a> {
         search_results
     }
 
+    /// Searches for verses that are located within a certain range of ayahs.
+    pub fn search_range(
+        &mut self,
+        start_ayah_number: usize,
+        end_ayah_number: usize,
+        search_term: &str,
+    ) -> Vec<(String, usize, String)> {
+        let mut search_results = vec![];
+
+        for ayah in self
+            .quran
+            .ayas()
+            .iter()
+            .skip(start_ayah_number)
+            .take(end_ayah_number - start_ayah_number + 1)
+        {
+            if ayah.contains_word(search_term) {
+                search_results.push((
+                    ayah.surah_name().to_string(),
+                    ayah.number(),
+                    ayah.text().to_string(),
+                ));
+            }
+        }
+
+        search_results
+    }
+
     /// Searches for verses that are located in a certain surah.
     pub fn search_surah(
         &mut self,
@@ -40,19 +68,13 @@ impl<'a> QuranSearch<'a> {
     ) -> Vec<(String, usize, String)> {
         let mut search_results = vec![];
 
-        for (i, surah) in self.quran.surahs().iter().enumerate() {
-            if i == surah_number - 1 {
-                for ayah in surah.ayas().iter() {
-                    if ayah.contains_word(search_term) {
-                        search_results.push((
-                            surah.name().to_string(),
-                            ayah.number(),
-                            ayah.text().to_string(),
-                        ));
-                    }
-                }
-
-                break;
+        for ayah in self.quran.surahs()[surah_number - 1].ayas().iter() {
+            if ayah.contains_word(search_term) {
+                search_results.push((
+                    ayah.surah_name().to_string(),
+                    ayah.number(),
+                    ayah.text().to_string(),
+                ));
             }
         }
 
@@ -81,8 +103,6 @@ mod tests {
 
         // Perform the search
         let search_results = search.search(search_term);
-
-        println!("{:#?}", search_results);
         assert_eq!(search_results.len(), 2);
     }
 
@@ -100,5 +120,17 @@ mod tests {
         // Assert the expected results
         assert_eq!(search_results.len(), 1);
         // Add more assertions as needed based on your test case
+    }
+
+    #[test]
+    fn test_search_range() {
+        let quran = create_test_quran();
+
+        // Search for verses in the range 1-5 containing the term "Allah"
+        let mut search = QuranSearch::new(&quran);
+
+        let search_results = search.search_range(1, 5, "الله");
+
+        assert_eq!(search_results.len(), 0);
     }
 }
