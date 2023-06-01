@@ -1,15 +1,17 @@
+pub mod summary;
 pub mod surah;
 pub mod verse;
 
 use std::{fs::File, io::BufReader};
 
+use summary::Summary;
 use surah::Surah;
 
 use crate::error::QuranError;
 
 const QURAN_FILE_PATH: &str = "quran.json";
 
-struct Quran {
+pub struct Quran {
     surahs: Vec<Surah>,
 }
 
@@ -34,6 +36,12 @@ impl Quran {
         let surahs: Vec<Surah> = Self::parse_json(reader)?;
 
         Ok(Self { surahs })
+    }
+
+    pub fn summarize(&self) -> Summary {
+        Summary {
+            total_chapters: self.surahs.len(),
+        }
     }
 }
 
