@@ -1,13 +1,12 @@
-use quranic_analyzer::quran::Quran;
+use quranic_analyzer::quran::{concordance::Concordance, Quran};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut quran = Quran::new()?;
-    let concordance = quran.generate_concordance();
+    let quran = Quran::new()?;
+    let mut concordance = Concordance::new(&quran);
 
-    for (word, count) in concordance {
-        println!("The word {} appears {} times in the Quran.", word, count);
-    }
+    concordance.generate();
 
-    println!("The concordance length is {}", concordance.len());
+    concordance.print_to_file("concordance.txt");
+
     Ok(())
 }
