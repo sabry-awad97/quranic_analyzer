@@ -13,6 +13,14 @@ impl Ayah {
     pub fn words(&self) -> Vec<&str> {
         self.text.trim().split_whitespace().collect()
     }
+
+    pub fn text(&self) -> &str {
+        self.text.as_str()
+    }
+
+    pub fn contains_word(&self, search_term: &str) -> bool {
+        self.words().iter().any(|&word| word.contains(search_term))
+    }
 }
 
 impl TotalLetters for Ayah {
