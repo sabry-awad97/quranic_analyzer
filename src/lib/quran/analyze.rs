@@ -7,7 +7,7 @@ use crate::traits::TotalLetters;
 use super::Quran;
 
 #[derive(Debug)]
-pub struct Summary {
+pub struct Analyzer {
     pub total_surahs: usize,
     pub total_ayahs: usize,
     pub average_letters_per_surah: usize,
@@ -17,11 +17,10 @@ pub struct Summary {
     pub shortest_surah_name: String,
     pub shortest_surah_letters: usize,
     pub most_common_word: Option<(String, i32)>,
-    pub search_results: Vec<(String, String)>,
 }
 
-impl Summary {
-    pub fn new(quran: Quran, search_term: &str) -> Summary {
+impl Analyzer {
+    pub fn new(quran: &Quran) -> Analyzer {
         let mut word_counts = HashMap::new();
 
         let mut total_surahs = 0;
@@ -59,21 +58,9 @@ impl Summary {
             total_surahs += 1;
         }
 
-        let search_results: Vec<(String, String)> = quran
-            .surahs
-            .iter()
-            .flat_map(|surah| {
-                surah
-                    .ayas()
-                    .iter()
-                    .filter(|ayah| ayah.contains_word(search_term))
-                    .map(move |ayah| (surah.name().to_string(), ayah.text().to_string()))
-            })
-            .collect();
-
         let most_common_word = word_counts.into_iter().max_by(|a, b| a.1.cmp(&b.1));
 
-        let average_letters_per_surah = total_letters / total_surahs;
+        let average_letters_per_surah = total_letters;
         let average_words_per_surah = total_words / total_surahs;
 
         Self {
@@ -86,22 +73,7 @@ impl Summary {
             shortest_surah_name: shortest_surah_name.to_string(),
             shortest_surah_letters,
             most_common_word,
-            search_results,
         }
-    }
-
-    pub fn print_search_results(&self) {
-        println!("Search Results:");
-        if self.search_results.is_empty() {
-            println!("No matching results found.");
-        } else {
-            for (surah_name, ayah_text) in &self.search_results {
-                println!("Surah: {}", surah_name);
-                println!("Ayah: {}", ayah_text);
-                println!("---");
-            }
-        }
-        println!("{}", self.search_results.len());
     }
 
     pub fn print(&self) {

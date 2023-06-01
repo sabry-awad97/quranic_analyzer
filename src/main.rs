@@ -1,9 +1,11 @@
-use quranic_analyzer::quran::{summary::Summary, Quran};
+use quranic_analyzer::quran::{analyze::Analyzer, search::QuranSearch, Quran};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let quran = Quran::new()?;
-    let summary = Summary::new(quran, "الله");
+    let summary = Analyzer::new(&quran);
     summary.print();
-    summary.print_search_results();
+
+    let mut searcher = QuranSearch::new(&quran);
+    searcher.search("الله");
     Ok(())
 }

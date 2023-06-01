@@ -1,4 +1,5 @@
-pub mod summary;
+pub mod analyze;
+pub mod search;
 pub mod surah;
 pub mod verse;
 
