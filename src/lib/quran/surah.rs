@@ -9,7 +9,7 @@ pub struct Surah {
     transliteration: String,
     translation: String,
     #[serde(rename = "type")]
-    type_: String,
+    revelation_type: String,
     total_verses: u32,
     verses: Vec<Verse>,
 }
