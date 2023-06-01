@@ -1,6 +1,9 @@
 use serde::{Deserialize, Serialize};
 
-use crate::traits::{TotalLetters, TotalWords};
+use crate::{
+    strip_tashkeel,
+    traits::{TotalLetters, TotalWords},
+};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Ayah {
@@ -19,7 +22,8 @@ impl Ayah {
     }
 
     pub fn contains_word(&self, search_term: &str) -> bool {
-        self.text.contains(search_term)
+        let stripped = strip_tashkeel(&self.text);
+        stripped.contains(search_term)
     }
 }
 
