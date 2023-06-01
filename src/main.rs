@@ -1,4 +1,4 @@
-use quranic_analyzer::quran::{concordance::Concordance, Quran};
+use quran::quran::{concordance::Concordance, Quran};
 use structopt::StructOpt;
 
 #[derive(StructOpt)]

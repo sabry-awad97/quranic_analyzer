@@ -304,7 +304,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "quranic_analyzer"
+name = "quran"
 version = "0.1.0"
 dependencies = [
  "prettytable-rs",
