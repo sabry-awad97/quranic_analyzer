@@ -50,7 +50,10 @@ impl<'a> Concordance<'a> {
 
         table.add_row(vec!["Word", "Count"].into());
 
-        for (word, count) in &self.concordance {
+        let mut sorted_pairs = self.concordance.iter().collect::<Vec<_>>();
+        // sorted_pairs.sort_by(|a, b| b.1.cmp(a.1));
+        sorted_pairs.sort_by_key(|(key, _)| *key);
+        for (word, count) in sorted_pairs {
             table.add_row(vec![word, &count.to_string()].into());
         }
 
