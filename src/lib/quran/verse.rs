@@ -9,6 +9,12 @@ pub struct Ayah {
     translation: String,
 }
 
+impl Ayah {
+    pub fn text(&self) -> &str {
+        &self.text
+    }
+}
+
 impl TotalLetters for Ayah {
     fn total_letters(&self) -> usize {
         self.text.chars().count()

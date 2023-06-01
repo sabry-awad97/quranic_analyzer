@@ -10,6 +10,8 @@ pub struct Summary {
     pub longest_surah_letters: usize,
     pub shortest_surah_name: String,
     pub shortest_surah_letters: usize,
+    pub most_common_word: String,
+    pub most_common_word_occurrences: i32,
 }
 
 impl Summary {
@@ -58,6 +60,16 @@ impl Summary {
         table.add_row(Row::new(vec![
             Cell::new("Shortest Surah Letters"),
             Cell::new(&self.shortest_surah_letters.to_string()),
+        ]));
+
+        table.add_row(Row::new(vec![
+            Cell::new("Most Common Word"),
+            Cell::new(&self.most_common_word),
+        ]));
+
+        table.add_row(Row::new(vec![
+            Cell::new("Most Common Word Occurrences"),
+            Cell::new(&self.most_common_word_occurrences.to_string()),
         ]));
 
         table.printstd();

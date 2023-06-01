@@ -22,6 +22,10 @@ impl Surah {
         &self.name
     }
 
+    pub fn ayas(&self) -> &Vec<Ayah> {
+        &self.ayahs
+    }
+
     pub fn total_ayahs(&self) -> usize {
         self.ayahs.len()
     }
