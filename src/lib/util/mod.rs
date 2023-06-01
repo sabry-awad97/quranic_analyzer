@@ -83,10 +83,6 @@ mod tests {
         let text = "Hello World!";
         let stripped = strip_tashkeel(text);
         assert_eq!(stripped, "Hello World!");
-
-        let text = "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ";
-        let stripped = strip_tashkeel(text);
-        println!("{}", stripped);
     }
 
     #[test]

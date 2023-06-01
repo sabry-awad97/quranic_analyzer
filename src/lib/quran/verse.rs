@@ -26,6 +26,7 @@ impl Ayah {
     }
 
     pub fn contains_word(&self, search_term: &str) -> bool {
+        let search_term = &remove_diacritics(search_term);
         let stripped = remove_diacritics(&self.text);
         stripped.contains(search_term)
     }
