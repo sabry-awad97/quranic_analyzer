@@ -19,7 +19,7 @@ impl Ayah {
     }
 
     pub fn contains_word(&self, search_term: &str) -> bool {
-        self.words().iter().any(|&word| word.contains(search_term))
+        self.text.contains(search_term)
     }
 }
 
