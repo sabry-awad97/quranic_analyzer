@@ -43,7 +43,7 @@ impl<'a> Concordance<'a> {
                 end_ayah_number = start_ayah_number;
             }
 
-            for ayah in &surah.ayahs()[start_ayah_number..=end_ayah_number] {
+            for ayah in &surah.ayahs()[start_ayah_number..end_ayah_number] {
                 for word in ayah.words() {
                     self.concordance
                         .entry(word.to_string())
@@ -91,9 +91,9 @@ impl<'a> Concordance<'a> {
             .into(),
         );
 
-        let sorted_pairs = self.concordance.iter().collect::<Vec<_>>();
-        // sorted_pairs.sort_by_key(|(_, (count, _))| *count);
-        // sorted_pairs.reverse();
+        let mut sorted_pairs = self.concordance.iter().collect::<Vec<_>>();
+        sorted_pairs.sort_by_key(|(_, (count, _))| *count);
+        sorted_pairs.reverse();
 
         let mut total_count = 0;
         for (word, (count, ayahs)) in sorted_pairs {
