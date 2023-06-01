@@ -31,18 +31,4 @@ impl<'a> QuranSearch<'a> {
 
         search_results
     }
-
-    pub fn print_search_results(&self) {
-        println!("Search Results:");
-        if self.search_results.is_empty() {
-            println!("No matching results found.");
-        } else {
-            for (surah_name, ayah_text) in &self.search_results {
-                println!("Surah: {}", surah_name);
-                println!("Ayah: {}", ayah_text);
-                println!("---");
-            }
-        }
-        println!("{}", self.search_results.len());
-    }
 }
