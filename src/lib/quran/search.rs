@@ -2,7 +2,7 @@ use super::Quran;
 
 pub struct QuranSearch<'a> {
     quran: &'a Quran,
-    search_results: Vec<(String, String)>,
+    search_results: Vec<(String, usize, String)>,
 }
 
 impl<'a> QuranSearch<'a> {
@@ -13,7 +13,7 @@ impl<'a> QuranSearch<'a> {
         }
     }
 
-    pub fn search(&mut self, search_term: &str) -> Vec<(String, String)> {
+    pub fn search(&mut self, search_term: &str) -> Vec<(String, usize, String)> {
         let search_results = self
             .quran
             .surahs()
@@ -23,7 +23,13 @@ impl<'a> QuranSearch<'a> {
                     .ayas()
                     .iter()
                     .filter(|ayah| ayah.contains_word(search_term))
-                    .map(move |ayah| (surah.name().to_string(), ayah.text().to_string()))
+                    .map(move |ayah| {
+                        (
+                            surah.name().to_string(),
+                            ayah.number(),
+                            ayah.text().to_string(),
+                        )
+                    })
             })
             .collect::<Vec<_>>();
 
