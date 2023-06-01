@@ -8,7 +8,7 @@ use super::Quran;
 
 pub struct Concordance<'a> {
     quran: &'a Quran,
-    concordance: HashMap<String, usize>,
+    concordance: HashMap<String, (usize, Vec<(usize, String)>)>,
 }
 
 impl<'a> Concordance<'a> {
@@ -19,42 +19,45 @@ impl<'a> Concordance<'a> {
         }
     }
 
-    pub fn generate(&mut self) -> &HashMap<String, usize> {
-        for surah in &self.quran.surahs {
+    pub fn generate(&mut self) {
+        for surah in self.quran.surahs() {
             for ayah in surah.ayas() {
                 for word in ayah.words() {
-                    let stripped = remove_diacritics(word);
-                    *self.concordance.entry(stripped).or_insert(0) += 1;
+                    let word = remove_diacritics(word);
+                    self.concordance
+                        .entry(word.to_string())
+                        .or_insert((0, vec![]))
+                        .0 += 1;
+                    self.concordance
+                        .get_mut(&word)
+                        .unwrap()
+                        .1
+                        .push((ayah.number(), surah.name().to_owned()));
                 }
             }
         }
-        &self.concordance
-    }
-
-    pub fn print(&self) {
-        let mut table = Table::new();
-        table.set_format(*prettytable::format::consts::FORMAT_BOX_CHARS);
-
-        table.add_row(vec!["Word", "Count"].into());
-
-        for (word, count) in &self.concordance {
-            table.add_row(vec![word, &count.to_string()].into());
-        }
-
-        table.printstd();
     }
 
     pub fn print_to_file(&self, file_path: &str) {
         let mut table = Table::new();
         table.set_format(*prettytable::format::consts::FORMAT_BOX_CHARS);
 
-        table.add_row(vec!["Word", "Count"].into());
+        table.add_row(vec!["Word", "Count", "Ayah", "Sura"].into());
 
         let mut sorted_pairs = self.concordance.iter().collect::<Vec<_>>();
-        // sorted_pairs.sort_by(|a, b| b.1.cmp(a.1));
         sorted_pairs.sort_by_key(|(key, _)| *key);
-        for (word, count) in sorted_pairs {
-            table.add_row(vec![word, &count.to_string()].into());
+        for (word, (count, ayahs)) in sorted_pairs {
+            for (ayah, sura) in ayahs {
+                table.add_row(
+                    vec![
+                        word,
+                        &count.to_string(),
+                        &ayah.to_string(),
+                        &sura.to_string(),
+                    ]
+                    .into(),
+                );
+            }
         }
 
         let mut file = File::create(file_path).expect("Could not create file");

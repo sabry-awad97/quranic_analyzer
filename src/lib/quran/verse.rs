@@ -21,6 +21,10 @@ impl Ayah {
         self.text.as_str()
     }
 
+    pub fn number(&self) -> usize {
+        self.id as usize
+    }
+
     pub fn contains_word(&self, search_term: &str) -> bool {
         let stripped = remove_diacritics(&self.text);
         stripped.contains(search_term)
