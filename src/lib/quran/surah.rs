@@ -19,7 +19,7 @@ impl Surah {
         self.id
     }
 
-    pub fn ayas(&self) -> &Vec<Ayah> {
+    pub fn ayahs(&self) -> &Vec<Ayah> {
         &self.ayahs
     }
 

@@ -30,14 +30,18 @@ impl Quran {
         &self.surahs
     }
 
+    pub fn surah(&self, surah_number: usize) -> &Surah {
+        &self.surahs[surah_number]
+    }
+
     pub fn ayas(&self) -> Vec<&Ayah> {
         self.surahs
             .iter()
-            .map(|s| s.ayas())
+            .map(|s| s.ayahs())
             .clone()
             .flatten()
             .collect::<Vec<_>>()
-    } 
+    }
 
     fn read_json() -> Result<serde_json::Value, QuranError> {
         let file = Self::open_file()?;

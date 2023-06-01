@@ -16,7 +16,7 @@ impl<'a> QuranSearch<'a> {
             .iter()
             .flat_map(|surah| {
                 surah
-                    .ayas()
+                    .ayahs()
                     .iter()
                     .filter(|ayah| ayah.contains_word(search_term))
                     .map(move |ayah| {
@@ -28,6 +28,21 @@ impl<'a> QuranSearch<'a> {
                     })
             })
             .collect::<Vec<_>>();
+
+        search_results
+    }
+
+    /// Searches for verses that contain multiple terms.
+    pub fn search_multiple_terms(
+        &mut self,
+        search_terms: Vec<&str>,
+    ) -> Vec<(String, usize, String)> {
+        let mut search_results = vec![];
+
+        for search_term in search_terms {
+            let mut temp_results = self.search(search_term);
+            search_results.append(&mut temp_results);
+        }
 
         search_results
     }
@@ -68,7 +83,7 @@ impl<'a> QuranSearch<'a> {
     ) -> Vec<(String, usize, String)> {
         let mut search_results = vec![];
 
-        for ayah in self.quran.surahs()[surah_number - 1].ayas().iter() {
+        for ayah in self.quran.surahs()[surah_number - 1].ayahs().iter() {
             if ayah.contains_word(search_term) {
                 search_results.push((
                     ayah.surah_name().to_string(),

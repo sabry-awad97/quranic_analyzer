@@ -48,7 +48,7 @@ impl Analyzer<'_> {
 
         for surah in self.quran.surahs() {
             let mut surah_letters = 0;
-            for ayah in surah.ayas() {
+            for ayah in surah.ayahs() {
                 for word in ayah.words() {
                     let lowercase_word = word.to_lowercase();
                     *word_counts.entry(lowercase_word).or_insert(0) += 1;
