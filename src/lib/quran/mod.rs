@@ -36,7 +36,9 @@ impl Quran {
             average_letters_per_surah: self.average_letters_per_surah(),
             average_words_per_surah: self.average_words_per_surah(),
             longest_surah_name: longest_surah.name().to_string(),
+            longest_surah_letters: longest_surah.total_letters(),
             shortest_surah_name: shortest_surah.name().to_string(),
+            shortest_surah_letters: shortest_surah.total_letters(),
         }
     }
 

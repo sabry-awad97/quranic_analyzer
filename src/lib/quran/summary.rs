@@ -7,7 +7,9 @@ pub struct Summary {
     pub average_letters_per_surah: usize,
     pub average_words_per_surah: usize,
     pub longest_surah_name: String,
+    pub longest_surah_letters: usize,
     pub shortest_surah_name: String,
+    pub shortest_surah_letters: usize,
 }
 
 impl Summary {
@@ -44,8 +46,18 @@ impl Summary {
         ]));
 
         table.add_row(Row::new(vec![
+            Cell::new("Longest Surah Letters"),
+            Cell::new(&self.longest_surah_letters.to_string()),
+        ]));
+
+        table.add_row(Row::new(vec![
             Cell::new("Shortest Surah Name"),
             Cell::new(&self.shortest_surah_name),
+        ]));
+
+        table.add_row(Row::new(vec![
+            Cell::new("Shortest Surah Letters"),
+            Cell::new(&self.shortest_surah_letters.to_string()),
         ]));
 
         table.printstd();
