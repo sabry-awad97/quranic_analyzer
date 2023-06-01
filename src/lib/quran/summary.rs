@@ -101,6 +101,7 @@ impl Summary {
                 println!("---");
             }
         }
+        println!("{}", self.search_results.len());
     }
 
     pub fn print(&self) {

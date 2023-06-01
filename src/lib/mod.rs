@@ -3,4 +3,4 @@ pub mod quran;
 mod traits;
 mod util;
 
-pub use util::strip_tashkeel;
+pub use util::remove_diacritics;

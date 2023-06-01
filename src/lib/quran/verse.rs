@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    strip_tashkeel,
+    remove_diacritics,
     traits::{TotalLetters, TotalWords},
 };
 
@@ -22,7 +22,7 @@ impl Ayah {
     }
 
     pub fn contains_word(&self, search_term: &str) -> bool {
-        let stripped = strip_tashkeel(&self.text);
+        let stripped = remove_diacritics(&self.text);
         stripped.contains(search_term)
     }
 }

@@ -11,7 +11,8 @@ const TASHKEEL: [char; 8] = [
     FATHATAN, DAMMATAN, KASRATAN, FATHA, DAMMA, KASRA, SUKUN, SHADDA,
 ];
 
-pub fn strip_tashkeel(text: &str) -> String {
+#[allow(unused)]
+fn strip_tashkeel(text: &str) -> String {
     let mut stripped = String::new();
     for c in text.chars() {
         if !is_tashkeel(c) {
@@ -28,6 +29,38 @@ fn is_vocalized(word: &str) -> bool {
 
 fn is_tashkeel(archar: char) -> bool {
     TASHKEEL.contains(&archar)
+}
+
+
+fn replace_character(input: &str, search_char: char, replace_char: char) -> String {
+    let mut output = String::new();
+    for c in input.chars() {
+        if c == search_char {
+            output.push(replace_char);
+        } else {
+            output.push(c);
+        }
+    }
+    output
+}
+
+pub fn remove_diacritics(input: &str) -> String {
+    let input = replace_character(input, 'ٱ', 'ا');
+    let arabic_chars: Vec<char> = vec![
+        'َ', 'ً', 'ُ', 'ٌ', 'ِ', 'ٍ', 'ْ', 'ّ', 'ٰ', 'ٓ', 'ٔ', 'ٕ', 'ٰ', 'ٖ', 'ٗ', '٘', 'ٙ', 'ٚ', 'ٛ', 'ٰ', 'ٔ', 'ٕ', 'ۢ',
+        'ۚ', 'ۖ', 'ۗ', 'ۘ', 'ۙ', 'ۖ', 'ۗ', 'ۚ', 'ۛ', 'ۜ', '۟', '۠', 'ۡ', 'ۢ', 'ۣ', 'ۤ', 'ۥ', 'ۦ', 'ۧ', 'ۨ', 'ۨ', '۪',
+        '۫', '۬', 'ۭ', 'ۮ', 'ۯ', '۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '٠', '١', '٢', '٣',
+        '٤', '٥', '٦', '٧', '٨', '٩', '؟', '،', '؛',
+    ];
+
+    let mut output = String::new();
+    for c in input.chars() {
+        if !arabic_chars.contains(&c) {
+            output.push(c);
+        }
+    }
+
+    output
 }
 
 #[cfg(test)]
@@ -50,6 +83,10 @@ mod tests {
         let text = "Hello World!";
         let stripped = strip_tashkeel(text);
         assert_eq!(stripped, "Hello World!");
+
+        let text = "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ";
+        let stripped = strip_tashkeel(text);
+        println!("{}", stripped);
     }
 
     #[test]
