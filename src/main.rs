@@ -27,7 +27,13 @@ struct Options {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let options = Options::from_args();
-    let quran = Quran::new()?;
+    let mut quran = Quran::new()?;
+    let concordance = quran.generate_concordance();
+
+    for (word, count) in concordance {
+        println!("The word {} appears {} times in the Quran.", word, count);
+    }
+    
     let analyzer = Analyzer::new(&quran);
     let summary = analyzer.analyze();
 
@@ -62,8 +68,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
-    let mut searcher = QuranSearch::new(&quran);
-    let search_results = searcher.search("الله");
+    let mut quran_search = QuranSearch::new(&quran);
+    let search_results = quran_search.search("الله");
 
     println!("Search Results:");
     if search_results.is_empty() {

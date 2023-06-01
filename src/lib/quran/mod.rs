@@ -3,7 +3,7 @@ pub mod search;
 pub mod surah;
 pub mod verse;
 
-use std::{fs::File, io::BufReader};
+use std::{collections::HashMap, fs::File, io::BufReader};
 
 use surah::Surah;
 
@@ -13,6 +13,7 @@ const QURAN_FILE_PATH: &str = "quran.json";
 
 pub struct Quran {
     surahs: Vec<Surah>,
+    concordance: HashMap<String, usize>,
 }
 
 impl Quran {
@@ -21,11 +22,25 @@ impl Quran {
         let reader = Self::read_file(file)?;
         let surahs: Vec<Surah> = Self::parse_json(reader)?;
 
-        Ok(Self { surahs })
+        Ok(Self {
+            surahs,
+            concordance: HashMap::new(),
+        })
     }
 
     pub fn surahs(&self) -> &[Surah] {
         &self.surahs
+    }
+
+pub fn generate_concordance(&mut self) -> &HashMap<String, usize> {
+        for surah in &self.surahs {
+            for ayah in surah.ayas() {
+                for word in ayah.words() {
+                    *self.concordance.entry(word.to_string()).or_insert(0) += 1;
+                }
+            }
+        }
+        &self.concordance
     }
 
     fn open_file() -> Result<File, QuranError> {
