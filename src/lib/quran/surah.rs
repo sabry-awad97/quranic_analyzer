@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::verse::Verse;
+use super::verse::Ayah;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Surah {
@@ -11,5 +11,6 @@ pub struct Surah {
     #[serde(rename = "type")]
     revelation_type: String,
     total_verses: u32,
-    verses: Vec<Verse>,
+    #[serde(rename = "verses")]
+    ayahs: Vec<Ayah>,
 }
