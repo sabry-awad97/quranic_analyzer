@@ -4,6 +4,7 @@ use prettytable::{Cell, Row, Table};
 pub struct Summary {
     pub total_surahs: usize,
     pub total_ayahs: usize,
+    pub average_letters_per_surah: usize,
 }
 
 impl Summary {
@@ -22,6 +23,11 @@ impl Summary {
         table.add_row(Row::new(vec![
             Cell::new("Total Ayahs"),
             Cell::new(&self.total_ayahs.to_string()),
+        ]));
+
+        table.add_row(Row::new(vec![
+            Cell::new("Average Letters per Surah"),
+            Cell::new(&self.average_letters_per_surah.to_string()),
         ]));
 
         table.printstd();

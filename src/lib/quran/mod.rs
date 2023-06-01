@@ -7,7 +7,7 @@ use std::{fs::File, io::BufReader};
 use summary::Summary;
 use surah::Surah;
 
-use crate::error::QuranError;
+use crate::{error::QuranError, traits::TotalLetters};
 
 const QURAN_FILE_PATH: &str = "quran.json";
 
@@ -28,7 +28,16 @@ impl Quran {
         Summary {
             total_surahs: self.total_surahs(),
             total_ayahs: self.total_ayahs(),
+            average_letters_per_surah: self.average_letters_per_surah(),
         }
+    }
+
+    fn average_letters_per_surah(&self) -> usize {
+        self.surahs
+            .iter()
+            .map(|chapter| chapter.total_letters())
+            .sum::<usize>()
+            / self.surahs.len()
     }
 
     fn open_file() -> Result<File, QuranError> {

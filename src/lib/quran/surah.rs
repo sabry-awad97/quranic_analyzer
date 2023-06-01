@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::traits::TotalLetters;
+
 use super::verse::Ayah;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -18,5 +20,11 @@ pub struct Surah {
 impl Surah {
     pub fn total_ayahs(&self) -> usize {
         self.ayahs.len()
+    }
+}
+
+impl TotalLetters for Surah {
+    fn total_letters(&self) -> usize {
+        self.ayahs.iter().map(|verse| verse.total_letters()).sum()
     }
 }
