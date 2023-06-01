@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::traits::TotalLetters;
+use crate::traits::{TotalLetters, TotalWords};
 
 use super::verse::Ayah;
 
@@ -26,5 +26,11 @@ impl Surah {
 impl TotalLetters for Surah {
     fn total_letters(&self) -> usize {
         self.ayahs.iter().map(|verse| verse.total_letters()).sum()
+    }
+}
+
+impl TotalWords for Surah {
+    fn total_words(&self) -> usize {
+        self.ayahs.iter().map(|verse| verse.total_words()).sum()
     }
 }
