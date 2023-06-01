@@ -2,7 +2,8 @@ use prettytable::{Cell, Row, Table};
 
 #[derive(Debug)]
 pub struct Summary {
-    pub total_chapters: usize,
+    pub total_surahs: usize,
+    pub total_ayahs: usize,
 }
 
 impl Summary {
@@ -14,8 +15,13 @@ impl Summary {
         table.add_row(Row::new(vec![Cell::new("key"), Cell::new("value")]));
 
         table.add_row(Row::new(vec![
-            Cell::new("Total Chapters"),
-            Cell::new(&self.total_chapters.to_string()),
+            Cell::new("Total Surahs"),
+            Cell::new(&self.total_surahs.to_string()),
+        ]));
+
+        table.add_row(Row::new(vec![
+            Cell::new("Total Ayahs"),
+            Cell::new(&self.total_ayahs.to_string()),
         ]));
 
         table.printstd();

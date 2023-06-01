@@ -14,3 +14,9 @@ pub struct Surah {
     #[serde(rename = "verses")]
     ayahs: Vec<Ayah>,
 }
+
+impl Surah {
+    pub fn total_ayahs(&self) -> usize {
+        self.ayahs.len()
+    }
+}

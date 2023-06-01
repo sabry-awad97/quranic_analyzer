@@ -16,6 +16,21 @@ pub struct Quran {
 }
 
 impl Quran {
+    pub fn new() -> Result<Self, QuranError> {
+        let file = Self::open_file()?;
+        let reader = Self::read_file(file)?;
+        let surahs: Vec<Surah> = Self::parse_json(reader)?;
+
+        Ok(Self { surahs })
+    }
+
+    pub fn summarize(&self) -> Summary {
+        Summary {
+            total_surahs: self.total_surahs(),
+            total_ayahs: self.total_ayahs(),
+        }
+    }
+
     fn open_file() -> Result<File, QuranError> {
         File::open(QURAN_FILE_PATH)
             .map_err(|e| QuranError::FileOpenError(format!("{}: {}", QURAN_FILE_PATH, e)))
@@ -30,18 +45,12 @@ impl Quran {
             .map_err(|e| QuranError::JsonError(format!("{}: {}", QURAN_FILE_PATH, e)))
     }
 
-    pub fn new() -> Result<Self, QuranError> {
-        let file = Self::open_file()?;
-        let reader = Self::read_file(file)?;
-        let surahs: Vec<Surah> = Self::parse_json(reader)?;
-
-        Ok(Self { surahs })
+    fn total_surahs(&self) -> usize {
+        self.surahs.len()
     }
 
-    pub fn summarize(&self) -> Summary {
-        Summary {
-            total_chapters: self.surahs.len(),
-        }
+    fn total_ayahs(&self) -> usize {
+        self.surahs.iter().map(|surah| surah.total_ayahs()).sum()
     }
 }
 
