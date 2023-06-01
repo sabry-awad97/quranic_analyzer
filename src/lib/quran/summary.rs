@@ -10,8 +10,7 @@ pub struct Summary {
     pub longest_surah_letters: usize,
     pub shortest_surah_name: String,
     pub shortest_surah_letters: usize,
-    pub most_common_word: String,
-    pub most_common_word_occurrences: i32,
+    pub most_common_word: Option<(String, i32)>,
 }
 
 impl Summary {
@@ -19,8 +18,6 @@ impl Summary {
         let mut table = Table::new();
         table.set_format(*prettytable::format::consts::FORMAT_BOX_CHARS);
         table.set_titles(Row::new(vec![Cell::new("Summary")]));
-
-        table.add_row(Row::new(vec![Cell::new("key"), Cell::new("value")]));
 
         table.add_row(Row::new(vec![
             Cell::new("Total Surahs"),
@@ -62,15 +59,17 @@ impl Summary {
             Cell::new(&self.shortest_surah_letters.to_string()),
         ]));
 
-        table.add_row(Row::new(vec![
-            Cell::new("Most Common Word"),
-            Cell::new(&self.most_common_word),
-        ]));
+        if let Some((word, count)) = &self.most_common_word {
+            table.add_row(Row::new(vec![
+                Cell::new("Most Common Word"),
+                Cell::new(&format!("{} ", word)),
+            ]));
 
-        table.add_row(Row::new(vec![
-            Cell::new("Most Common Word Occurrences"),
-            Cell::new(&self.most_common_word_occurrences.to_string()),
-        ]));
+            table.add_row(Row::new(vec![
+                Cell::new("Most Common Word Occurrences"),
+                Cell::new(&count.to_string()),
+            ]));
+        }
 
         table.printstd();
     }

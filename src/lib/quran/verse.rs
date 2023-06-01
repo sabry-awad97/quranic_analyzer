@@ -10,8 +10,8 @@ pub struct Ayah {
 }
 
 impl Ayah {
-    pub fn text(&self) -> &str {
-        &self.text
+    pub fn words(&self) -> Vec<&str> {
+        self.text.trim().split_whitespace().collect()
     }
 }
 
@@ -23,6 +23,6 @@ impl TotalLetters for Ayah {
 
 impl TotalWords for Ayah {
     fn total_words(&self) -> usize {
-        self.text.trim().split_whitespace().count()
+        self.words().len()
     }
 }
