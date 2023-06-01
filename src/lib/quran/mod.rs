@@ -31,8 +31,44 @@ impl Quran {
     pub fn new() -> Result<Self, QuranError> {
         let file = Self::open_file()?;
         let reader = Self::read_file(file)?;
-        let surahs = Self::parse_json(reader)?;
+        let surahs: Vec<Surah> = Self::parse_json(reader)?;
 
         Ok(Self { surahs })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::io::Read;
+
+    use super::*;
+
+    #[test]
+    fn test_open_file() {
+        let file = Quran::open_file().unwrap();
+        assert!(file.metadata().unwrap().len() > 0);
+    }
+
+    #[test]
+    fn test_read_file() {
+        let file = Quran::open_file().unwrap();
+        let mut reader = Quran::read_file(file).unwrap();
+        let mut buffer = [0; 10];
+        let bytes_read = reader.read(&mut buffer).unwrap();
+        assert_eq!(bytes_read, 10);
+    }
+
+    #[test]
+    fn test_parse_json() {
+        let file = Quran::open_file().unwrap();
+        let reader = Quran::read_file(file).unwrap();
+        let surahs = Quran::parse_json(reader).unwrap();
+        assert_eq!(surahs.len(), 114);
+    }
+
+    #[test]
+    fn test_new() {
+        let quran = Quran::new().unwrap();
+        assert_eq!(quran.surahs.len(), 114);
     }
 }
