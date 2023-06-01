@@ -28,12 +28,20 @@ impl Quran {
     }
 
     pub fn summarize(&self) -> Summary {
+        let longest_surah = self.longest_surah().unwrap();
         Summary {
             total_surahs: self.total_surahs(),
             total_ayahs: self.total_ayahs(),
             average_letters_per_surah: self.average_letters_per_surah(),
             average_words_per_surah: self.average_words_per_surah(),
+            longest_surah_name: longest_surah.name().to_string(),
         }
+    }
+
+    fn longest_surah(&self) -> Option<&Surah> {
+        self.surahs
+            .iter()
+            .max_by(|&a, &b| a.total_letters().cmp(&b.total_letters()))
     }
 
     fn average_words_per_surah(&self) -> usize {

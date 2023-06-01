@@ -18,6 +18,10 @@ pub struct Surah {
 }
 
 impl Surah {
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
     pub fn total_ayahs(&self) -> usize {
         self.ayahs.len()
     }
