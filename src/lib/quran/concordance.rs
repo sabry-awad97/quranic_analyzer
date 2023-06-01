@@ -25,8 +25,12 @@ impl<'a> Concordance<'a> {
         V: Into<Option<usize>>,
     {
         let start_ayah_number = start_ayah_number.into().unwrap_or(0);
-        if let Some(surah_number) = surah_number.into() {
-            let surah = self.quran.surah(surah_number);
+
+        if let Some(mut surah_number) = surah_number.into() {
+            if surah_number == 0 {
+                surah_number = 1
+            }
+            let surah = self.quran.surah(surah_number - 1);
             let ayahs_count = surah.ayahs().len();
 
             let mut end_ayah_number = end_ayah_number.into().unwrap_or(ayahs_count);
@@ -39,7 +43,7 @@ impl<'a> Concordance<'a> {
                 end_ayah_number = start_ayah_number;
             }
 
-            for ayah in &surah.ayahs()[start_ayah_number..end_ayah_number] {
+            for ayah in &surah.ayahs()[start_ayah_number..=end_ayah_number] {
                 for word in ayah.words() {
                     self.concordance
                         .entry(word.to_string())
@@ -87,9 +91,9 @@ impl<'a> Concordance<'a> {
             .into(),
         );
 
-        let mut sorted_pairs = self.concordance.iter().collect::<Vec<_>>();
-        sorted_pairs.sort_by_key(|(_, (count, _))| *count);
-        sorted_pairs.reverse();
+        let sorted_pairs = self.concordance.iter().collect::<Vec<_>>();
+        // sorted_pairs.sort_by_key(|(_, (count, _))| *count);
+        // sorted_pairs.reverse();
 
         let mut total_count = 0;
         for (word, (count, ayahs)) in sorted_pairs {
