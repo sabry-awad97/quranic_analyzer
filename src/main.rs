@@ -4,13 +4,13 @@ use structopt::StructOpt;
 #[derive(StructOpt)]
 struct Options {
     #[structopt(short = "s", long = "surah")]
-    surah_number: usize,
+    surah_number: Option<usize>,
 
     #[structopt(short = "a", long = "start_ayah")]
-    start_ayah_number: usize,
+    start_ayah_number: Option<usize>,
 
     #[structopt(short = "e", long = "end_ayah")]
-    end_ayah_number: usize,
+    end_ayah_number: Option<usize>,
 
     #[structopt(short = "o", long = "output_file", default_value = "concordance.txt")]
     output_file: String,
