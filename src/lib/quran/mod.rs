@@ -23,6 +23,10 @@ impl Quran {
         Ok(Self { surahs })
     }
 
+    pub fn surahs(&self) -> &[Surah] {
+        &self.surahs
+    }
+
     fn open_file() -> Result<File, QuranError> {
         File::open(QURAN_FILE_PATH)
             .map_err(|e| QuranError::FileOpenError(format!("{}: {}", QURAN_FILE_PATH, e)))

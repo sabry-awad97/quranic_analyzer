@@ -31,7 +31,7 @@ impl Summary {
         let mut longest_surah_letters = 0;
         let mut shortest_surah_name = "";
         let mut shortest_surah_letters = usize::MAX;
-        for surah in &quran.surahs {
+        for surah in quran.surahs() {
             let mut surah_letters = 0;
             for ayah in surah.ayas() {
                 for word in ayah.words() {
