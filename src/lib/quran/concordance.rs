@@ -1,7 +1,6 @@
 use std::{collections::HashMap, fs::File};
 
 use prettytable::Table;
-use textwrap::fill;
 
 use super::Quran;
 
@@ -81,15 +80,7 @@ impl<'a> Concordance<'a> {
 
         let width = 15;
 
-        table.add_row(
-            vec![
-                fill("الكلمة", width),
-                fill("العدد", width),
-                fill("الأية", width),
-                fill("السورة", width),
-            ]
-            .into(),
-        );
+        table.add_row(vec!["الكلمة", "العدد", "الأية", "السورة"].into());
 
         let mut sorted_pairs = self.concordance.iter().collect::<Vec<_>>();
         sorted_pairs.sort_by_key(|(_, (count, _))| *count);
@@ -99,26 +90,10 @@ impl<'a> Concordance<'a> {
         for (word, (count, ayahs)) in sorted_pairs {
             total_count += count;
 
-            table.add_row(
-                vec![
-                    fill(word, width),
-                    fill(&count.to_string(), width),
-                    fill(" ", width),
-                    fill(" ", width),
-                ]
-                .into(),
-            );
+            table.add_row(vec![word, &count.to_string(), "", ""].into());
 
             for (ayah, sura) in ayahs {
-                table.add_row(
-                    vec![
-                        fill(" ", width),
-                        fill(" ", width),
-                        fill(&ayah.to_string(), width),
-                        fill(&sura.to_string(), width),
-                    ]
-                    .into(),
-                );
+                table.add_row(vec!["", "", &ayah.to_string(), &sura.to_string()].into());
             }
         }
 
@@ -132,15 +107,13 @@ impl<'a> Concordance<'a> {
             .into(),
         );
 
-        table.add_row(
-            vec![
-                fill("العدد الكلى", width),
-                fill(&total_count.to_string(), 10),
-                fill(" ", width),
-                fill(" ", width),
-            ]
-            .into(),
-        );
+        table.add_row(vec!["العدد الكلى", &total_count.to_string(), "", ""].into());
+
+        for row in table.row_iter_mut() {
+            for cell in row.iter_mut() {
+                cell.align(prettytable::format::Alignment::CENTER)
+            }
+        }
 
         let mut file = File::create(file_path).expect("Could not create file");
         table.print(&mut file).unwrap();
