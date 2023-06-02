@@ -4,15 +4,13 @@ pub mod search;
 pub mod surah;
 pub mod verse;
 
-use std::{fs::File, io::BufReader};
-
 use surah::Surah;
 
 use crate::error::QuranError;
 
 use self::verse::Ayah;
 
-const QURAN_FILE_PATH: &str = "quran.json";
+const QURAN_FILE_PATH: &str = "../../data/quran.json";
 
 pub struct Quran {
     surahs: Vec<Surah>,
@@ -20,7 +18,9 @@ pub struct Quran {
 
 impl Quran {
     pub fn new() -> Result<Self, QuranError> {
-        let json_value = Self::read_json()?;
+        let str_value = include_str!("../../data/quran.json");
+        let json_value: serde_json::Value = serde_json::from_str(str_value)
+            .map_err(|e| QuranError::JsonError(format!("{}: {}", QURAN_FILE_PATH, e)))?;
         let surahs: Vec<Surah> = Self::parse_surahs(json_value)?;
 
         Ok(Self { surahs })
@@ -41,24 +41,6 @@ impl Quran {
             .clone()
             .flatten()
             .collect::<Vec<_>>()
-    }
-
-    fn read_json() -> Result<serde_json::Value, QuranError> {
-        let file = Self::open_file()?;
-        let reader = Self::read_file(file)?;
-        let json_value: serde_json::Value = serde_json::from_reader(reader)
-            .map_err(|e| QuranError::JsonError(format!("{}: {}", QURAN_FILE_PATH, e)))?;
-
-        Ok(json_value)
-    }
-
-    fn open_file() -> Result<File, QuranError> {
-        File::open(QURAN_FILE_PATH)
-            .map_err(|e| QuranError::FileOpenError(format!("{}: {}", QURAN_FILE_PATH, e)))
-    }
-
-    fn read_file(file: File) -> Result<BufReader<File>, QuranError> {
-        Ok(BufReader::new(file))
     }
 
     fn parse_surahs(json_value: serde_json::Value) -> Result<Vec<Surah>, QuranError> {
@@ -126,24 +108,7 @@ impl Quran {
 
 #[cfg(test)]
 mod tests {
-    use std::io::Read;
-
     use super::*;
-
-    #[test]
-    fn test_open_file() {
-        let file = Quran::open_file().unwrap();
-        assert!(file.metadata().unwrap().len() > 0);
-    }
-
-    #[test]
-    fn test_read_file() {
-        let file = Quran::open_file().unwrap();
-        let mut reader = Quran::read_file(file).unwrap();
-        let mut buffer = [0; 10];
-        let bytes_read = reader.read(&mut buffer).unwrap();
-        assert_eq!(bytes_read, 10);
-    }
 
     #[test]
     fn test_new() {
