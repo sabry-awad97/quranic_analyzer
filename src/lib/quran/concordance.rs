@@ -6,7 +6,7 @@ use super::Quran;
 
 pub struct Concordance<'a> {
     quran: &'a Quran,
-    concordance: HashMap<String, (usize, Vec<(usize, String)>)>,
+    concordance: HashMap<String, (usize, Vec<(usize, String, String)>)>,
 }
 
 impl<'a> Concordance<'a> {
@@ -48,11 +48,11 @@ impl<'a> Concordance<'a> {
                         .entry(word.to_string())
                         .or_insert((0, vec![]))
                         .0 += 1;
-                    self.concordance
-                        .get_mut(word)
-                        .unwrap()
-                        .1
-                        .push((ayah.number(), surah.name().to_owned()));
+                    self.concordance.get_mut(word).unwrap().1.push((
+                        ayah.number(),
+                        surah.name().to_owned(),
+                        ayah.text().to_string(),
+                    ));
                 }
             }
         } else {
@@ -63,11 +63,11 @@ impl<'a> Concordance<'a> {
                             .entry(word.to_string())
                             .or_insert((0, vec![]))
                             .0 += 1;
-                        self.concordance
-                            .get_mut(word)
-                            .unwrap()
-                            .1
-                            .push((ayah.number(), surah.name().to_owned()));
+                        self.concordance.get_mut(word).unwrap().1.push((
+                            ayah.number(),
+                            surah.name().to_owned(),
+                            ayah.text().to_string(),
+                        ));
                     }
                 }
             }
@@ -80,7 +80,7 @@ impl<'a> Concordance<'a> {
 
         let width = 15;
 
-        table.add_row(vec!["الكلمة", "العدد", "الأية", "السورة"].into());
+        table.add_row(vec!["الكلمة", "العدد", "رقم الأية", "السورة", "الأية"].into());
 
         let mut sorted_pairs = self.concordance.iter().collect::<Vec<_>>();
         sorted_pairs.sort_by_key(|(_, (count, _))| *count);
@@ -92,13 +92,14 @@ impl<'a> Concordance<'a> {
 
             table.add_row(vec![word, &count.to_string(), "", ""].into());
 
-            for (ayah, sura) in ayahs {
-                table.add_row(vec!["", "", &ayah.to_string(), &sura.to_string()].into());
+            for (ayah_number, sura, ayah_text) in ayahs {
+                table.add_row(vec!["", "", &ayah_number.to_string(), &sura.to_string(), ayah_text].into());
             }
         }
 
         table.add_row(
             vec![
+                "-".repeat(width),
                 "-".repeat(width),
                 "-".repeat(width),
                 "-".repeat(width),
